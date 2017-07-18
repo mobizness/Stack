@@ -1,0 +1,6 @@
+html{font-family:"Lato","Helvetica","Arial",sans-serif !important}
+body{padding:20px 0 0;background:#fafafa;position:relative;font-family:"Lato","Helvetica","Arial",sans-serif !important}
+input{font-family:"Lato","Helvetica","Arial",sans-serif !important;}
+.login-card-wide.mdl-card{width:95%;max-width:512px;margin:0 auto}
+.login-card-wide>.mdl-card__title{color:#fff;height:150px;background-color:#607d8b}
+.mdl-textfield{width:100%}

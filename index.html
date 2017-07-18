@@ -1,0 +1,505 @@
+ <!doctype html>
+ <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+ <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+ <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+ <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+ <head>
+   <meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <base href="/">
+   <title translate>Wi-Fi Management Platform</title>
+   <meta name="description" content="">
+   <!-- <meta name="viewport" content="width=device-width"> -->
+   <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0' >
+   <!-- <meta http-equiv="Content-Security-Policy" content="default-src * 'self' data: blob: 'unsafe-inline' 'unsafe-eval' wss://*.pusher.com"> -->
+   <!-- <meta name='viewport' content='width=device-width, initial-scale=1.0' > -->
+
+   <meta name="mobile-web-app-capable" content="yes">
+   <!-- <meta name="apple-mobile-web-app-capable" content="yes"> -->
+
+   <!-- build:css(client) app/vendor.css -->
+   <!-- bower:css -->
+   <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+   <link rel="stylesheet" href="bower_components/angular-material-data-table/dist/md-data-table.css" />
+   <link rel="stylesheet" href="bower_components/dragula.js/dist/dragula.css" />
+   <link rel="stylesheet" href="bower_components/jquery-minicolors/jquery.minicolors.css" />
+   <!-- endbower -->
+   <!-- endbuild -->
+   <!-- build:css({.tmp,client}) app/app.css -->
+   <!-- injector:css -->
+   <link rel="stylesheet" href="client/main/default.css">
+   <link rel="stylesheet" href="client/main/material.css">
+   <!-- endinjector -->
+   <!-- endbuild -->
+
+   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+   <style type="text/css">
+     [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+       display: none !important;
+     }
+   </style>
+
+ </head>
+
+ <body ng-class="{ 'login': ct_login.active  }" ng-app="myApp" layout="row" ng-controller="MainCtrl as vm" ng-cloak xx-ng-strict-di>
+
+   <!-- This should be a template so it's not just CT -->
+   <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-KQ7WSH"
+       height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+       j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+         '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+   })(window,document,'script','dataLayer','GTM-KQ7WSH');</script>
+
+   <md-progress-linear class="login-spin-hide" ng-class="{ 'login-spin': ct_login.active  }" md-mode="query"></md-progress-linear>
+
+   <div flex layout="column" tabIndex="-1" role="main" class="md-whiteframe-z2" ng-hide="ct_login.active">
+     <md-toolbar ng-hide="vm.menu.hideToolbar">
+       <div class="md-toolbar-tools">
+         <md-button id="main" ng-if="!vm.menu.hideBurger" class="md-icon-button" ng-click="toggleOpen()" aria-label="'Settings' | translate">
+           <md-icon>menu</md-icon>
+         </md-button>
+         <h2>
+           <a href="/">{{ brandName.name | titleCase }}</a>
+         </h2>
+         <md-divider class="vertical-divider" ng-if="vm.menu.sectionName"></md-divider>
+         <h2>
+           {{ vm.menu.sectionName }}
+         </h2>
+         <span flex></span>
+         <span hide show-gt-sm ng-if="loggedIn">
+           <md-menu>
+             <md-button aria-label="'Open Apps Menu' | translate" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+               <md-icon>apps</md-icon>
+             </md-button>
+             <md-menu-content width="4" >
+               <md-menu-item ng-repeat="item in vm.menu.main">
+                 <md-divider ng-if="section.type === 'divider'" class="divider"></md-divider>
+                 <md-button ing-if="section.type === 'link'" href='{{item.link}}' ng-click="$mdMenu.hide()">
+                   <md-icon md-menu-align-target>{{ item.icon }}</md-icon>
+                   {{ item.title }}
+                 </md-button>
+               </md-menu-item>
+             </md-menu-content>
+           </md-menu>
+
+           <md-menu>
+             <md-button aria-label="'Open Apps Menu' | translate" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+               <md-icon>assessment</md-icon>
+             </md-button>
+             <md-menu-content width="4" >
+               <md-menu-item ng-repeat="item in vm.menu.reports">
+                 <md-divider ng-if="section.type === 'divider'" class="divider"></md-divider>
+                 <md-button ing-if="section.type === 'link'" href='{{item.link}}' ng-click="$mdMenu.hide()">
+                   <md-icon md-menu-align-target>{{ item.icon }}</md-icon>
+                   {{ item.title }}
+                 </md-button>
+               </md-menu-item>
+             </md-menu-content>
+           </md-menu>
+           <!-- <md-menu> -->
+           <!--   <md-button aria-label="'Open Apps Menu' | translate" href="/audit" class="md-icon-button" iiing-click="$mdOpenMenu($event)"> -->
+           <!--     <md-icon>assessment</md-icon> -->
+           <!--   </md-button> -->
+           <!-- </md-menu> -->
+           <!-- <md-menu> -->
+           <!--   <md-button aria-label="'Open Apps Menu' | translate" href="/audit" class="md-icon-button" iiing-click="$mdOpenMenu($event)"> -->
+           <!--     <md-icon>assessment</md-icon> -->
+           <!--   </md-button> -->
+           <!--   <1!-- <md-menu-content width="4" > --1> -->
+           <!--   <1!--   <md-menu-item ng-repeat="item in vm.menu.reports"> --1> -->
+           <!--   <1!--     <md-divider ng-if="section.type === 'divider'" class="divider"></md-divider> --1> -->
+           <!--   <1!--     <md-button ing-if="section.type === 'link'" href='{{item.link}}' ng-click="$mdMenu.hide()"> --1> -->
+           <!--   <1!--       <md-icon md-menu-align-target>{{ item.icon }}</md-icon> --1> -->
+           <!--   <1!--       {{ item.title }} --1> -->
+           <!--   <1!--     </md-button> --1> -->
+           <!--   <1!--   </md-menu-item> --1> -->
+           <!--   <1!-- </md-menu-content> --1> -->
+           <!-- </md-menu> -->
+           <!-- <md-button class="md-icon-button" aria-label="'Support' | translate" ng-if="!vm.menu.Intercom"> -->
+           <!--   <a target="_blank" href="http://discuss.cucumberwifi.io"> -->
+           <!--     <md-icon>forum</md-icon> -->
+           <!--   </a> -->
+           <!-- </md-button> -->
+           <!-- <md-button class="md-icon-button" aria-label="'Support' | translate" id="intercom" ng-if="vm.menu.Intercom"> -->
+           <!--   <md-icon>chat</md-icon> -->
+           <!-- </md-button> -->
+           <md-button class="md-icon-button" aria-label="'Support' | translate">
+             <a target="_blank" href="http://discuss.cucumberwifi.io">
+               <md-icon>forum</md-icon>
+             </a>
+           </md-button>
+           <md-menu md-position-mode="target">
+             <md-button aria-label="Open Menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+               <user-avatar></user-avatar>
+             </md-button>
+             <md-menu-content width="4" >
+               <md-menu-item>
+                 <md-button ng-href="/me" ng-click="$mdMenu.hide()">
+                   <md-icon md-menu-align-target style="margin: auto 3px auto 0;">face</md-icon>
+                   <span translate>Account</span>
+                 </md-button>
+               </md-menu-item>
+               <md-menu-divider></md-menu-divider>
+
+               <!--<md-menu-item>
+                  <md-button ng-href="/users" ng-click="$mdMenu.hide()">
+                  <md-icon md-menu-align-target style="margin: auto 3px auto 0;">people</md-icon>
+                  <span translate>Manage Users</span>
+                  </md-button>
+               </md-menu-item>-->
+
+               <!--<md-menu-divider></md-menu-divider>-->
+               <md-menu-item>
+                 <md-button target="_blank" ng-href="http://docs.cucumberwifi.io" >
+                   <md-icon md-menu-align-target style="margin: auto 3px auto 0;">account_balance</md-icon>
+                   <span translate>Documentation</span>
+                 </md-button>
+               </md-menu-item>
+
+               <md-menu-item>
+                 <md-button target="_blank" ng-href="https://discuss.cucumberwifi.io/" >
+                   <md-icon md-menu-align-target style="margin: auto 3px auto 0;">forum</md-icon>
+                   <span translate>Discussions</span>
+                 </md-button>
+               </md-menu-item>
+
+               <!--<md-menu-divider></md-menu-divider>-->
+               <md-menu-item>
+                 <md-button href="/downloads" ng-click="$mdMenu.hide()">
+                   <md-icon md-menu-align-target style="margin: auto 3px auto 0;">get_app</md-icon>
+                   <span translate>Downloads</span>
+                 </md-button>
+               </md-menu-item>
+
+               <md-menu-item>
+                 <md-button href="/apps" ng-click="$mdMenu.hide()">
+                   <md-icon md-menu-align-target style="margin: auto 3px auto 0;">build</md-icon>
+                   <span translate>Developer</span>
+                 </md-button>
+               </md-menu-item>
+
+               <md-menu-divider></md-menu-divider>
+
+               <md-menu-item>
+                 <md-button ng-click="logout()">
+                   <md-icon md-menu-align-target style="margin: auto 3px auto 0;">exit_to_app</md-icon>
+                   <span translate>Logout</span>
+                 </md-button>
+               </md-menu-item>
+             </md-menu-content>
+           </md-menu>
+         </span>
+         <md-button id="main" hide-gt-sm class="md-icon-button" ng-click="toggle('right')" aria-label="'Settings' | translate">
+           <md-icon>apps</md-icon>
+         </md-button>
+       </div>
+     </md-toolbar>
+
+     <md-content layout="row" flex id="content">
+       <section layout="row" flex>
+         <md-sidenav flex-xs flex-gt-sm="20" class="site-sidenav md-sidenav-right md-whiteframe-z2"
+                                             md-is-open="vm.menu.isOpenRight"
+                                             md-component-id="right" ng-click="toggle('right')">
+           <md-content layout-padding>
+             <ul class="side-menu">
+               <li ng-repeat="section in vm.menuRight" class="parent-list-item">
+                 <menu-link section="section" ng-if="section.type === 'link'" side="right" id="section.id"></menu-link>
+                 <md-divider ng-if="section.type === 'divider'" class="divider"></md-divider>
+               </li>
+               <span ng-if="false">
+                 <li class="parent-list-item">
+                   <md-button>
+                     <md-icon>chat</md-icon>
+                     <translate>
+                       Support
+                     </translate>
+                   </md-button>
+                 </li>
+               </span>
+               <li class="parent-list-item">
+                 <md-button ng-click="logout()">
+                   <md-icon md-menu-align-target>exit_to_app</md-icon>
+                   <span translate>Logout</span>
+                 </md-button>
+               </li>
+             </ul>
+
+           </md-content>
+         </md-sidenav>
+
+         <md-sidenav class="site-sidenav md-sidenav-left md-whiteframe-1dp"
+                     md-component-id="left"
+                     aria-label="'Main Menu' | translate"
+                     md-whiteframe="4"
+                     md-is-open="vm.menu.isOpenLeft"
+                     md-is-locked-open="vm.menu.isOpen && $mdMedia('gt-sm')">
+
+           <md-content role="navigation" class="flex" ng-cloak>
+
+             <md-toolbar class="md-table-toolbar md-default">
+               <div class="sidenav md-toolbar-tools">
+                 <h2 class="menu-heading menu-subhead" iing-if="section.type === 'header'">
+                   <span ng-if="vm.menu.archived">
+                     <md-icon>archived</md-icon>
+                     <md-tooltip md-direction="bottom">This location has been archived</md-tooltip>
+                   </span>
+                   {{ vm.menu.header }}
+                 </h2>
+               </div>
+               <md-divider></md-divider>
+             </md-toolbar>
+
+             <ul class="side-menu">
+               <li ng-repeat="section in vm.menu.sections" class="parent-list-item" iing-class="{'active' : vm.isSelected(section) }">
+                 <menu-link section="section" ng-if="section.type === 'link'"></menu-link>
+                 <md-divider ng-if="section.type === 'divider'" class="divider"></md-divider>
+                 <h2 class="menu-heading menu-subhead" id="heading_{{ section.name | nospace }}" ng-if="section.type === 'subhead'">
+                   {{ section.name }}
+                 </h2>
+               </li>
+             </ul>
+           </md-content>
+           <div layout="row" layout-padding layout-align="start end" class="copy" hide show-gt-md>
+             <small>
+               <translate>Privacy Policy - Terms of Service</translate><br>
+               ©2016 Cucumber Tony.<br>Build #{{ commit }}</small>
+           </div>
+         </md-sidenav>
+         <md-content class="intercom-foot-pad" flex>
+           <div ng-view autoscroll="true" ng-class="{'hidden': notFound}"></div>
+           <div style="margin: 30px 40px;" ng-class="{'hidden': !notFound}">
+             <h3>Weird, the resource was not found. Please try again.</h3>
+           </div>
+         </md-content>
+       </section>
+     </md-content>
+
+   </div>
+
+   <md-sidenav flex-xs flex-gt-sm="20" class="design-sidebar md-sidenav-right md-whiteframe-z2" md-component-id="" md-is-locked-open="vm.menu.Designer === true">
+     <md-content layout-padding>
+       <design-menu ver="designer"></design-menu>
+     </md-content>
+   </md-sidenav>
+
+   <!--[if lt IE 9]>
+       <script src="bower_components/es5-shim/es5-shim.js"></script>
+       <script src="bower_components/json3/lib/json3.min.js"></script>
+       <![endif]-->
+
+
+   <!-- build:js({client,node_modules}) app/vendor.js -->
+   <!-- bower:js -->
+   <script src="bower_components/modernizr/modernizr.js"></script>
+   <script src="bower_components/jquery/dist/jquery.js"></script>
+   <script src="bower_components/angular/angular.js"></script>
+   <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+   <script src="bower_components/moment/min/moment-with-locales.js"></script>
+   <script src="bower_components/angular-moment/angular-moment.js"></script>
+   <script src="bower_components/angular-payments/lib/angular-payments.js"></script>
+   <script src="bower_components/angular-resource/angular-resource.js"></script>
+   <script src="bower_components/angular-route/angular-route.js"></script>
+   <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+   <script src="bower_components/ngstorage/ngStorage.js"></script>
+   <script src="bower_components/pusher-angular/lib/pusher-angular.js"></script>
+   <script src="bower_components/urijs/src/SecondLevelDomains.js"></script>
+   <script src="bower_components/urijs/src/URI.js"></script>
+   <script src="bower_components/angular-animate/angular-animate.js"></script>
+   <script src="bower_components/angular-aria/angular-aria.js"></script>
+   <script src="bower_components/angular-messages/angular-messages.js"></script>
+   <script src="bower_components/angular-material/angular-material.js"></script>
+   <script src="bower_components/angular-material-data-table/dist/md-data-table.js"></script>
+   <script src="bower_components/dragula.js/dist/dragula.js"></script>
+   <script src="bower_components/jquery-minicolors/jquery.minicolors.js"></script>
+   <script src="bower_components/angular-minicolors/angular-minicolors.js"></script>
+   <script src="bower_components/filepicker-js-bower/filepicker.min.js"></script>
+   <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+   <script src="bower_components/promise-polyfill/Promise.js"></script>
+   <script src="bower_components/moment-duration-format/lib/moment-duration-format.js"></script>
+   <script src="bower_components/angular-gettext/dist/angular-gettext.js"></script>
+   <script src="bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js"></script>
+   <script src="bower_components/angular-scroll-glue/src/scrollglue.js"></script>
+   <!-- endbower -->
+   <!-- endbuild -->
+
+   <!-- build:js({.tmp,client}) app/app.js -->
+   <script src="client/app.js"></script>
+   <!-- injector:js -->
+   <script src="client/main/main.controllers.js"></script>
+   <script src="client/main/main.directives.js"></script>
+   <script src="client/main/main.filters.js"></script>
+   <script src="client/main/main.js"></script>
+   <script src="client/main/main.services.js"></script>
+   <script src="components/access_token/access-token.services.js"></script>
+   <script src="components/apps/apps.directives.js"></script>
+   <script src="components/apps/apps.services.js"></script>
+   <script src="components/audit/audits.directives.js"></script>
+   <script src="components/audit/audits.services.js"></script>
+   <script src="components/authentications/authentications.controller.js"></script>
+   <script src="components/authentications/authentications.services.js"></script>
+   <script src="components/boxes/boxes.controllers.js"></script>
+   <script src="components/boxes/boxes.directives.js"></script>
+   <script src="components/boxes/boxes.filters.js"></script>
+   <script src="components/boxes/boxes.services.js"></script>
+   <script src="components/brands/brands.directives.js"></script>
+   <script src="components/brands/brands.services.js"></script>
+   <script src="components/device_types/device_types.directives.js"></script>
+   <script src="components/device_types/device_types.services.js"></script>
+   <script src="components/device_types/device_types.controller.js"></script>
+   <script src="components/charts/charts.directives.js"></script>
+   <script src="components/clients/clients.directives.js"></script>
+   <script src="components/clients/clients.services.js"></script>
+   <script src="components/codes/codes.directives.js"></script>
+   <script src="components/codes/codes.services.js"></script>
+   <script src="components/commands/commands.directives.js"></script>
+   <script src="components/commands/commands.services.js"></script>
+   <script src="components/controllers/brands.controller.js"></script>
+   <script src="components/controllers/zones.controller.js"></script>
+   <script src="components/directives/brand_users.js"></script>
+   <script src="components/directives/group_policies.directives.js"></script>
+   <script src="components/directives/invites.directives.js"></script>
+   <script src="components/directives/invites.services.js"></script>
+   <script src="components/directives/messages.directives.js"></script>
+   <script src="components/directives/operations.directives.js"></script>
+   <script src="components/directives/users.directives.js"></script>
+   <script src="components/directives/zones.directives.js"></script>
+   <script src="components/distros/distros.directives.js"></script>
+   <script src="components/distros/distros.services.js"></script>
+   <script src="components/docs/docs.directive.js"></script>
+   <script src="components/docs/docs.services.js"></script>
+   <script src="components/emails/emails.directives.js"></script>
+   <script src="components/emails/emails.services.js"></script>
+   <script src="components/events/events.controller.js"></script>
+   <script src="components/events/events.directives.js"></script>
+   <script src="components/events/events.services.js"></script>
+   <script src="components/filters/events.filters.js"></script>
+   <script src="components/filters/messages.filters.js"></script>
+   <script src="components/firmwares/firmwares.directives.js"></script>
+   <script src="components/firmwares/firmwares.services.js"></script>
+   <script src="components/forms/forms.directives.js"></script>
+   <script src="components/forms/forms.services.js"></script>
+   <script src="components/geocoder/geocoder.services.js"></script>
+   <script src="components/google/google.maps.directives.js"></script>
+   <script src="components/guests/guests.directives.js"></script>
+   <script src="components/guests/guests.services.js"></script>
+   <script src="components/heartbeats/heartbeats.controller.js"></script>
+   <script src="components/heartbeats/heartbeats.filters.js"></script>
+   <script src="components/heartbeats/heartbeats.services.js"></script>
+   <script src="components/integrations/integrations.services.js"></script>
+   <script src="components/invoices/invoices.controllers.js"></script>
+   <script src="components/invoices/invoices.directives.js"></script>
+   <script src="components/invoices/invoices.services.js"></script>
+   <script src="components/jobs/jobs.controller.js"></script>
+   <script src="components/jobs/jobs.services.js"></script>
+   <script src="components/locations/locations.controller.js"></script>
+   <script src="components/locations/locations.directives.js"></script>
+   <script src="components/locations/locations.filters.js"></script>
+   <script src="components/locations/locations.services.js"></script>
+   <script src="components/locations/triggers/triggers.directives.js"></script>
+   <script src="components/locations/triggers/triggers.filters.js"></script>
+   <script src="components/locations/triggers/triggers.services.js"></script>
+   <script src="components/main/main.directives.js"></script>
+   <script src="components/main/main.filters.js"></script>
+   <script src="components/main/main.services.js"></script>
+   <script src="components/material/menu.directives.js"></script>
+   <script src="components/material/menu.filters.js"></script>
+   <script src="components/material/menu.services.js"></script>
+   <script src="components/networks/networks.directives.js"></script>
+   <script src="components/networks/networks.services.js"></script>
+   <script src="components/payloads/payloads.directives.js"></script>
+   <script src="components/payloads/payloads.filters.js"></script>
+   <script src="components/payloads/payloads.services.js"></script>
+   <script src="components/plans/plans.directives.js"></script>
+   <script src="components/plans/plans.services.js"></script>
+   <script src="components/port_forwards/port_forwards.controller.js"></script>
+   <script src="components/port_forwards/port_forwards.directives.js"></script>
+   <script src="components/port_forwards/port_forwards.services.js"></script>
+   <script src="components/quotas/quotas.directives.js"></script>
+   <script src="components/quotas/quotas.services.js"></script>
+   <script src="components/registrations/registrations.controller.js"></script>
+   <script src="components/registrations/registrations.directive.js"></script>
+   <script src="components/registrations/registrations.services.js"></script>
+   <script src="components/reports/reports.controller.js"></script>
+   <script src="components/reports/reports.services.js"></script>
+   <script src="components/reports/reports.v2.directives.js"></script>
+   <script src="components/services/brand_users.services.js"></script>
+   <script src="components/services/group_policies.services.js"></script>
+   <script src="components/services/messages.services.js"></script>
+   <script src="components/services/operations.services.js"></script>
+   <script src="components/services/pagination_labels.services.js"></script>
+   <script src="components/services/projects.services.js"></script>
+   <script src="components/services/users.services.js"></script>
+   <script src="components/services/zones.services.js"></script>
+   <script src="components/social/social.directives.js"></script>
+   <script src="components/social/social.services.js"></script>
+   <script src="components/speedtests/speedtests.controller.js"></script>
+   <script src="components/speedtests/speedtests.services.js"></script>
+   <script src="components/splash_codes/splash_codes.directives.js"></script>
+   <script src="components/splash_codes/splash_codes.services.js"></script>
+   <script src="components/splash_pages/splash_pages.controller.js"></script>
+   <script src="components/splash_pages/splash_pages.directives.js"></script>
+   <script src="components/splash_pages/splash_pages.filters.js"></script>
+   <script src="components/splash_pages/splash_pages.services.js"></script>
+   <script src="components/subscriptions/subscriptions.services.js"></script>
+   <script src="components/upgrades/upgrades.controller.js"></script>
+   <script src="components/upgrades/upgrades.directives.js"></script>
+   <script src="components/upgrades/upgrades.services.js"></script>
+   <script src="components/users/users.controllers.js"></script>
+   <script src="components/versions/versions.directives.js"></script>
+   <script src="components/versions/versions.services.js"></script>
+   <script src="components/vouchers/vouchers.controller.js"></script>
+   <script src="components/vouchers/vouchers.directives.js"></script>
+   <script src="components/vouchers/vouchers.services.js"></script>
+   <script src="components/webhooks/webhooks.directives.js"></script>
+   <script src="components/webhooks/webhooks.services.js"></script>
+   <script src="scripts/config.js"></script>
+   <script src="scripts/highlight.pack.js"></script>
+   <!-- endinjector -->
+   <!-- endbuild -->
+
+   <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+
+   <script type="text/javascript">
+   WebFontConfig = {
+     google: { families: [ 'Roboto:500,400,300,700:latin,latin-ext' ] }
+   };
+   (function() {
+     var wf = document.createElement('script');
+     wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+     wf.type = 'text/javascript';
+     wf.async = 'true';
+     var s = document.getElementsByTagName('script')[0];
+     s.parentNode.insertBefore(wf, s);
+   })(); </script>
+
+   <script>
+     (function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;
+      s.src='https://widget.intercom.io/widget/zklfhs87';
+      var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()
+   </script>
+
+   <script>
+     $( document ).ready(function() {
+       if (!Modernizr.svg) {
+         $('img[src*="svg"]').attr('src', function () {
+           return $(this).attr('src').replace('.svg', '.png');
+         });
+       }
+     });
+   </script>
+
+   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+   <script type="text/javascript">
+     window.google.charts.load('current', {'packages':['corechart']});
+   </script>
+
+   <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key=AIzaSyD243NSdgNYjRHBVBrWoEKX728FYOxuUgE&libraries=visualization"></script>
+   <script src="//js.pusher.com/3.1/pusher.min.js"></script>
+   <script src="/scripts/highlight.pack.js"></script>
+
+ </body>
+ </html>

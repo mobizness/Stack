@@ -1,0 +1,31 @@
+<md-dialog aria-label="Run Payload" ng-cloak>
+  <form>
+    <md-toolbar class="md-primary">
+      <div class="md-toolbar-tools">
+        <h2 translate>Run Payload</h2>
+      </div>
+    </md-toolbar>
+    <md-dialog-content>
+      <div class="md-dialog-content">
+        <h2 translate>Run commands on your access points</h2>
+        <p translate>
+          Run a command on your devices simultaneously. Your devices must be online to receive the payload.
+        </p>
+        <run-payloads command="command"></run-payloads>
+      </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+      <span flex></span>
+      <md-button ng-click="cancel()">
+        <translate>
+          Cancel
+        </translate>
+      </md-button>
+      <md-button ng-click="runCommand(command)" ng-disabled="!command.upgrade && !command.selected" class="md-raised md-primary">
+        <translate>
+          Execute
+        </translate>
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>

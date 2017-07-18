@@ -1,0 +1,81 @@
+<md-dialog aria-label="{{ 'Health Check' | translate }}" ng-cloak>
+  <form name="myForm" ng-submit="save(myForm)">
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2 translate>Create Splash</h2>
+      </div>
+    </md-toolbar>
+    <md-dialog-content>
+      <div class="md-dialog-content" layout="column">
+        <div flex="auto" layout="column">
+          <p translate>You can design the splash pages to match your style.</p>
+        </div>
+        <div>
+          <div ng-if='obj.loading'>
+            <md-progress-linear md-mode="query"></md-progress-linear>
+            <p translate>Loading...</p>
+          </div>
+          <div flex="auto" layout="column" ng-hide='obj.loading'>
+            <md-input-container>
+              <label>
+                <translate>Access Type</translate>
+              </label>
+              <md-select ng-model="splash.primary_access_id">
+                <md-option ng-repeat="a in obj.access_types" value="{{a.id}}">
+                  {{a.id | translateAccessTypeName}}
+                </md-option>
+              </md-select>
+            </md-input-container>
+
+            <md-input-container>
+              <label>
+                <translate>Splash Name</translate>
+              </label>
+              <input name="splash_name" ng-minlength="5" md-maxlength="100" ng-model="splash.splash_name" required>
+              <div ng-messages="myForm.splash_name.$error">
+                <div ng-message="md-maxlength" translate>Max 32 characters</div>
+                <div ng-message="minlength" translate>Min 5 characters</div>
+                <div ng-message="required" translate>You must give it a name</div>
+              </div>
+            </md-input-container>
+
+            <md-input-container ng-show="obj.networks.length" ng-hide="newSsid">
+              <label>
+                <translate>Splash SSID (Network)</translate>
+              </label>
+              <md-select ng-model="splash.network_id">
+                <md-option ng-repeat="network in obj.networks" value="{{network.id}}">
+                  {{network.ssid}}
+                </md-option>
+              </md-select>
+            </md-input-container>
+
+            <md-input-container ng-if="newSsid">
+              <label>
+                <translate>SSID Name</translate>
+              </label>
+              <input name="ssid" ng-minlength="5" md-maxlength="32" ng-model="splash.ssid" required>
+              <div ng-messages="myForm.ssid.$error">
+                <div ng-message="md-maxlength" translate>Max 32 characters</div>
+                <div ng-message="minlength" translate>Min 5 characters</div>
+                <div ng-message="required" translate>You must set an SSID</div>
+                <div ng-message="pattern" translate>Invalid SSID</div>
+              </div>
+            </md-input-container>
+            <md-checkbox ng-model="newSsid" aria-label="{{ 'New SSID' | translate }}" ng-hide="obj.zones">
+              <translate>Create a new SSID</translate>
+            </md-checkbox>
+          </div>
+        </div>
+      </md-dialog-content>
+      <md-dialog-actions layout="row">
+        <span flex="auto"></span>
+        <md-button ng-click="close()">
+          <translate>Close</translate>
+        </md-button>
+        <md-button class="md-raised" ng-disabled="myForm.$invalid || myForm.$pristine" type="submit">
+          <translate>CREATE</translate>
+        </md-button>
+      </md-dialog-actions>
+    </form>
+  </md-dialog>

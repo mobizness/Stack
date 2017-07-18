@@ -1,0 +1,89 @@
+<md-toolbar class="md-table-toolbar md-default">
+  <div class="md-toolbar-tools">
+    <md-button id="main" class="md-icon-button md-primary" aria-label="{{ 'Users' | translate }}">
+      <md-icon md-font-icon="">people</md-icon>
+    </md-button>
+    <p translate>Admin Users</p>
+    <div flex></div>
+    <md-card-actions layout="row" layout-align="end center" simon-ng-if="allowed === true" >
+      <md-button class="md-icon-button md-accent" ng-click="invite()">
+        <md-icon>add_circle</md-icon>
+      </md-button>
+    </md-card-actions>
+  </div>
+  <md-divider></md-divider>
+</md-toolbar>
+
+<md-content class="md-padding" layout="column" layout-gt-sm='column'>
+  <div layout="row" layout-align="center center">
+    <div flex="100" flex-gt-sm="100">
+      <md-card>
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline" translate>
+              Admin Users
+            </span>
+            <span class="md-subhead" translate>
+              Add users to manage and monitor your location.
+            </span>
+          </md-card-title-text>
+        </md-card-title>
+        <md-card-content>
+          <md-table-container>
+            <table md-table md-row-select="options.rowSelection" ng-model="selected" md-progress="promise">
+              <thead md-head>
+                <tr md-row class="md-table-headers-row">
+                  <th hide show-gt-sm md-column><span translate>Username</span></th>
+                  <th md-column><span translate>Email</span></th>
+                  <th hide show-gt-sm md-column><span translate>Status</span></th>
+                  <th hide show-gt-md md-column><span translate>Created</span></th>
+                  <th ng-show="menu.length" md-column translate>Action</th>
+                </tr>
+              </thead>
+              <tbody md-body>
+                <tr md-row md-select="user" md-auto-select="options.autoSelect" ng-repeat="user in filtered = (users | filter: query.filter | orderBy: query.order)">
+                  <td hide show-gt-sm md-cell>
+                    <span ng-if="user.username"> {{ ::user.username }}</span>
+                    <span ng-if="!user.username" translate>N/A</span>
+                  </td md-cell>
+                  <td md-cell>
+                    {{ ::user.email }}
+                    <md-tooltip hide-gt-sm>
+                      <translate>
+                        State: {{ user.state | titleCase }}. Created: {{ (user.created_at || user.timestamp ) | humanTime }}
+                      </translate>
+                    </md-tooltip>
+                  </td md-cell>
+                  <td hide show-gt-sm md-cell>
+                    <translate>
+                    {{ user.primary ? "Owner" : (user.role_id | roleFilter) }}
+                  </translate>
+                  </td md-cell>
+                  <td hide show-gt-md md-cell>
+                    {{ (user.created_at || user.timestamp ) | humanTime }}
+                  </td md-cell>
+                  <td md-cell ng-if="menu.length">
+                    <md-menu>
+                      <md-button aria-label="{{ 'Open Clients Menu' | translate }}" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+                        <md-icon md-menu-origin md-font-icon="more_black" class="s24">more_vert</md-icon>
+                      </md-button>
+                      <md-menu-content width="4" >
+                        <md-menu-item ng-repeat="item in menu">
+                          <md-button ng-click="action(item.type,user)" ng-disabled="(user.primary === true && item.type != 'view') || (!user.primary && item.type == 'view')">
+                            <md-icon ng-if="item.icon" md-menu-origin md-font-icon="{{ ::item.icon }}">{{ ::item.icon }}</md-icon>
+                            <p flex>{{ ::item.name }}</p>
+                          </md-button>
+                        </md-menu-item>
+                      </md-menu-content>
+                    </md-menu>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </md-table-container>
+          <md-table-pagination ng-if="_links.total_entries" md-limit="query.limit" md-page="query.page" md-total="{{_links.total_entries}}" md-label="{{pagination_labels}}" md-on-paginate="onPaginate" md-page-select></md-table-pagination>
+        </md-card-content>
+      </md-card>
+    </div>
+  </div>
+</md-content>

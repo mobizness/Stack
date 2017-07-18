@@ -1,0 +1,54 @@
+<md-dialog aria-label="{{ 'Edit Device Type' | translate }}"  ng-cloak>
+  <form ng-submit="save(gp)" name="myForm">
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2 ng-if="gp.id" translate>Edit Device Type</h2>
+        <h2 ng-if="!gp.id" translate>Add Device Type</h2>
+      </div>
+    </md-toolbar>
+    <md-dialog-content>
+      <div class="md-dialog-content" layout="column">
+        <div flex="auto" layout="column">
+          <p translate>Edit a device type.</p>
+        </div>
+        <div flex="auto" layout="column">
+          <md-input-container class="block" style="margin-bottom: 0px;">
+            <label><translate>Name</translate></label>
+            <input name="name" ng-model="gp.name" md-maxlength='100' required>
+            <div ng-messages="myForm.name.$error">
+              <div ng-message="max" translate>Must be less than 100 characters</div>
+              <div ng-message="required" translate>Please enter a name.</div>
+            </div>
+          </md-input-container>
+          <md-input-container class="block" style="margin-bottom: 0px;">
+            <label><translate>HS_LANIF</translate></label>
+            <input name="hs_lanif" ng-model="gp.hs_lanif" md-maxlength='50' required>
+            <div ng-messages="myForm.hs_lanif.$error">
+              <div ng-message="max" translate>Must be less than 50 characters</div>
+              <div ng-message="required" translate>Please enter a HS_LANIF.</div>
+            </div>
+          </md-input-container>
+          <md-input-container class="block" style="margin-bottom: 0px;">
+            <label><translate>HS_WANIF</translate></label>
+            <input name="hs_wanif" ng-model="gp.hs_wanif" md-maxlength='50' required>
+            <div ng-messages="myForm.hs_wanif.$error">
+              <div ng-message="max" translate>Must be less than 50 characters</div>
+              <div ng-message="required" translate>Please enter a HS_WANIF.</div>
+            </div>
+          </md-input-container>
+        </div>
+      </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+      <span flex="auto"></span>
+      <md-button ng-click="close()">
+        <translate>
+          Close
+        </translate>
+      </md-button>
+      <md-button aria-label="Submit" type="submit" class="md-raised" ng-disabled="myForm.$pristine || myForm.$invalid">
+        <translate ng-if="gp.id">UPDATE</translate>
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>

@@ -1,0 +1,89 @@
+<client-vouchers loading="loading">
+
+  <md-toolbar class="md-table-toolbar md-default">
+    <div class="md-toolbar-tools">
+      <md-button id="main" class="md-icon-button md-primary" ng-click="back()" aria-label="{{ 'Settings' | translate }}">
+        <md-icon md-font-icon="arrow_back" >arrow_back</md-icon>
+      </md-button>
+      <p translate>Back to Client</p>
+      <span flex></span>
+      <clients-toolbar client="client"></clients-toolbar>
+    </div>
+    <md-divider></md-divider>
+  </md-toolbar>
+
+  <md-content class="md-padding" layout="column" layout-gt-sm='row' layout-wrap>
+
+    <div flex layout="column">
+      <md-card>
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline" translate>Associated Codes</span>
+            <span class="md-subhead" translate translate-n="{{filtered.length}}" translate-plural="{{ filtered.length || 0}} voucher codes in use by client.">1 voucher code in use by client.</span>
+          </md-card-title-text>
+        </md-card-title>
+        <md-card-content>
+          <md-table-container>
+            <table md-table md-row-select="options.rowSelection" ng-model="selected" md-progress="promise">
+              <thead md-head md-order="query.order" md-on-reorder="logOrder">
+                <tr md-row>
+                  <th md-column md-order-by="active"><span translate>Active</span></th>
+                  <th md-column md-order-by="username_human"><span translate>Username</span></th>
+                  <th hide show-gt-sm md-column hide show-gt-sm md-order-by="password" md-desc><span translate>Password</span></th>
+                  <th hide show-gt-sm md-column md-order-by="label"><span translate>Type</span></th>
+                  <th hide show-gt-sm md-column md-order-by="date_activated"><span translate>Activated</span></th>
+                  <th md-column><span translate>Action</span></th>
+                </tr>
+              </thead>
+              <tbody md-body>
+                <tr md-row md-select="code" md-on-select="logItem" md-auto-select="options.autoSelect" ng-repeat="code in filtered = (codes | filter: filter | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit)">
+                  <td md-cell>
+                    <md-icon md-menu-origin md-menu-icon="error_outline">{{ code.active ? "check_circle" : "highlight_off" }}</md-icon>
+                  </td>
+                  <td md-cell>
+                    <span hide show-gt-sm>{{ ::code.username }}</span>
+                    <span hide-gt-sm>{{ ::(code.username | truncate:20) }}
+                      <md-tooltip>{{ ::code.username }}</md-tooltip>
+                    </span>
+                    <span hide-gt-sm>
+                      {{ ::(code.date_activated | humanTimeShort) }}
+                    </span>
+                  </td>
+                  <td hide show-gt-sm md-cell>{{ ::code.password }}</td>
+                  <td hide show-gt-sm md-cell>{{ ::(code.label | titleCase) }}</td>
+                  <td hide show-gt-sm md-cell>
+                    {{ ::(code.date_activated | humanTime) }}
+                  </td>
+                  <td md-cell>
+                    <md-menu ng-show="codesMenu">
+                      <md-button aria-label="{{ 'Open Codes Menu' | translate }}" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+                        <md-icon md-menu-origin md-font-icon="more_black" class="s48">more_vert</md-icon>
+                      </md-button>
+                      <md-menu-content width="4" >
+                        <md-menu-item ng-repeat="item in codesMenu">
+                          <md-button ng-click="updateCode(code)" ng-if="item.name === 'activate'">
+                            <p flex>{{ code.active | booleanInverse }}</p>
+                          </md-button>
+                          <md-button ng-click="viewUsage(code)" ng-if="item.name === 'Usage'" ng-disabled="!code.date_activated">
+                            <p flex translate>View Usage</p>
+                          </md-button>
+                          <md-button href="/locations/{{location.slug}}/clients/{{client.id}}/codes/{{code.username}}" ng-if="item.name === 'Details'">
+                            <p flex translate>View Details</p>
+                          </md-button>
+                        </md-menu-item>
+                      </md-menu-content>
+                    </md-menu>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </md-table-container>
+          <md-table-pagination md-limit="query.limit" md-page="query.page" md-total="{{_links.total_entries}}" md-label="{{pagination_labels}}" md-on-paginate="onPaginate" md-page-select></md-table-pagination>
+        </md-card-content>
+      </md-card>
+
+    </div>
+
+  </md-content>
+
+</client-vouchers>

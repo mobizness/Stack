@@ -1,0 +1,72 @@
+<md-toolbar class="md-table-toolbar md-default">
+  <div class="md-toolbar-tools">
+    <md-button id="main" class="md-icon-button md-primary" ng-click="back()" aria-label="{{ 'Settings' | translate }}">
+      <md-icon md-font-icon="arrow_back" >arrow_back</md-icon>
+    </md-button>
+    <p ng-if="!device_type.id" translate>Back</p>
+    <p ng-if="device_type.id" translate>Back to Device Type</p>
+    <div flex></div>
+  </div>
+  <md-divider></md-divider>
+</md-toolbar>
+
+<form name="myForm" ng-submit="save(myForm,device_type)">
+  <md-content class="md-padding" layout="column" layout-gt-sm='column' layout-padding>
+    <div layout="row" layout-align="center center">
+      <div flex="100" flex-gt-md="30" flex-gt-sm="40">
+        <md-card>
+          <md-card-title>
+            <md-card-title-text>
+              <span class="md-headline" translate>
+                Create a Device Type
+              </span>
+            </md-card-title-text>
+          </md-card-title>
+
+          <md-card-content>
+            <div layout="row" layout-wrap>
+              <md-input-container flex="100" flex-gt-sm="100">
+                <label>
+                  <translate>Device Type Name</translate>
+                </label>
+                <input md-autofocus ng-model="device_type.name" name="name" placeholder="{{ 'Enter a name for device type' | translate }}" type="text" ng-minlength="5" md-maxlength='100' required>
+                <div ng-messages="myForm.name.$error" md-auto-hide="false">
+                  <div ng-message="max" translate>Must be less than 100 characters</div>
+                  <div ng-message="min" translate>Must be greater than 5 characters</div>
+                  <div ng-message="required" translate>Please enter a device type name.</div>
+                </div>
+              </md-input-container>
+              <md-input-container flex="100" flex-gt-sm="100">
+                <label>
+                  <translate>HS_LANIF</translate>
+                </label>
+                <input ng-model="device_type.hs_lanif" name="hs_lanif" placeholder="{{ 'Enter HS_LANIF' | translate }}" type="text" ng-minlength="5" md-maxlength='50' required>
+                <div ng-messages="myForm.hs_lanif.$error">
+                  <div ng-message="max" translate>Must be less than 50 characters</div>
+                  <div ng-message="min" translate>Must be greater than 5 characters</div>
+                  <div ng-message="required" translate>You must enter HS_LANIF.</div>
+                </div>
+              </md-input-container>
+              <md-input-container flex="100" flex-gt-sm="100">
+                <label>
+                  <translate>HS_WANIF</translate>
+                </label>
+                <input ng-model="device_type.hs_wanif" name="hs_wanif" placeholder="{{ 'Enter HS_WANIF' | translate }}" type="text" ng-minlength="5" md-maxlength='50' required>
+                <div ng-messages="myForm.device_type.$error">
+                  <div ng-message="max" translate>Must be less than 50 characters</div>
+                  <div ng-message="min" translate>Must be greater than 5 characters</div>
+                  <div ng-message="required" translate>You must enter HS_WANIF.</div>
+                </div>
+              </md-input-container>
+            </div>
+          </md-card-content>
+        </md-card>
+        <md-button type="submit" class="md-raised" ng-disabled="myForm.$pristine || myForm.$invalid">
+          <translate>
+            Save
+          </translate>
+        </md-button>
+      </div>
+    </div>
+  </md-content>
+</form>
